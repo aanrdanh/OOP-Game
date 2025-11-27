@@ -1,99 +1,56 @@
 package Control;
 
 import Entity.Entity;
-import static GameRunner.RunBomberman.*; 
+
+import static GameRunner.RunBomberman.*;
 
 public class Blocked {
 
-    public static class Tile {
-        public static final int EMPTY = 0;
-        public static final int WALL = 1;
-        public static final int BRICK = 2;
-        public static final int BOMB = 3;
-        public static final int EXPLOSION = 6;
-        public static final int PORTAL = 7;
-        public static final int ITEM = 8;
-
-        // ★★★ FAKE WALL — Tường giả ★★★
-        public static final int FAKE_WALL = 9;  // đi xuyên được nhưng chặn bom
+    public static boolean block_down(Entity entity) {   //Create a blocked that prevent all mob go down through the object
+        return id_objects[entity.getX() / 32][entity.getY() / 32 + 1] == 0;
     }
 
-    private static final int TILE_SIZE = 32;
-    private static final int ENTITY_WIDTH = 32;
-    private static final int ENTITY_HEIGHT = 32;
-
-    // Kiểm tra ngoài map
-    private static boolean outOfMap(int x, int y) {
-        return x < 0 || y < 0 || x >= id_objects.length || y >= id_objects[0].length;
+    public static boolean block_up(Entity entity) {     //Create a blocked that prevent all mob go up through the object
+        return id_objects[entity.getX() / 32][entity.getY() / 32 - 1] == 0;
     }
 
-    // Lấy tile an toàn
-    private static int safeTileAt(int tileX, int tileY) {
-        if (outOfMap(tileX, tileY)) return Tile.WALL;
-        return id_objects[tileX][tileY];
+    public static boolean block_left(Entity entity) {   //Create a blocked that prevent all mob go left through the object
+        return id_objects[entity.getX() / 32 - 1][entity.getY() / 32] == 0;
     }
 
-    // Xác định tile có phải SOLID (không đi xuyên được)
-    private static boolean isSolid(int tile) {
-
-        // Fake wall
-        if (tile == Tile.FAKE_WALL) return false;
-
-        return tile == Tile.WALL ||
-                tile == Tile.BRICK ||
-                tile == Tile.BOMB;
+    public static boolean block_right(Entity entity) {   //Create a blocked that prevent all mob go right through the object
+        return id_objects[entity.getX() / 32 + 1][entity.getY() / 32] == 0;
     }
 
-    // Smooth AABB movement
-    private static boolean canMoveSmooth(Entity e, int dx, int dy) {
-
-        int left   = e.getX() + dx;
-        int right  = e.getX() + ENTITY_WIDTH  + dx - 1;
-        int top    = e.getY() + dy;
-        int bottom = e.getY() + ENTITY_HEIGHT + dy - 1;
-
-        int tileLeft   = left   / TILE_SIZE;
-        int tileRight  = right  / TILE_SIZE;
-        int tileTop    = top    / TILE_SIZE;
-        int tileBottom = bottom / TILE_SIZE;
-
-        int t1 = safeTileAt(tileLeft,  tileTop);
-        int t2 = safeTileAt(tileRight, tileTop);
-        int t3 = safeTileAt(tileLeft,  tileBottom);
-        int t4 = safeTileAt(tileRight, tileBottom);
-
-        return !isSolid(t1) && !isSolid(t2) && !isSolid(t3) && !isSolid(t4);
+    public static boolean block_down_bomb(Entity entity, int power) {   //Limit the scope and animation of the explosion downward
+        return id_objects[entity.getX() / 32][entity.getY() / 32 + 1 + power] == 0
+                || id_objects[entity.getX() / 32][entity.getY() / 32 + 1 + power] == 3
+                || id_objects[entity.getX() / 32][entity.getY() / 32 + 1 + power] == 6
+                || id_objects[entity.getX() / 32][entity.getY() / 32 + 1 + power] == 7
+                || id_objects[entity.getX() / 32][entity.getY() / 32 + 1 + power] == 8;
     }
 
-    // Kiểm tra bom có thể lan qua tile
-    private static boolean canExplosionPass(int x, int y) {
-        int t = safeTileAt(x, y);
-
-        // ★★★ FAKE WALL CHẶN LỬA (giống tường thật) ★★★
-        if (t == Tile.FAKE_WALL) return false;
-
-        return t == Tile.EMPTY ||
-                t == Tile.BOMB ||
-                t == Tile.EXPLOSION ||
-                t == Tile.PORTAL ||
-                t == Tile.ITEM;
+    public static boolean block_up_bomb(Entity entity, int power) {     //Limit the scope and animation of the explosion upward
+        return id_objects[entity.getX() / 32][entity.getY() / 32 - 1 - power] == 0
+                || id_objects[entity.getX() / 32][entity.getY() / 32 - 1 - power] == 3
+                || id_objects[entity.getX() / 32][entity.getY() / 32 - 1 - power] == 6
+                || id_objects[entity.getX() / 32][entity.getY() / 32 - 1 - power] == 7
+                || id_objects[entity.getX() / 32][entity.getY() / 32 - 1 - power] == 8;
     }
 
-    private static boolean explosionCheck(Entity e, int dx, int dy, int power) {
-        int tileX = e.getX() / TILE_SIZE + dx * (power + 1);
-        int tileY = e.getY() / TILE_SIZE + dy * (power + 1);
-        return canExplosionPass(tileX, tileY);
+    public static boolean block_left_bomb(Entity entity, int power) {   //Limit the scope and animation of the explosion to the left
+        return id_objects[entity.getX() / 32 - 1 - power][entity.getY() / 32] == 0
+                || id_objects[entity.getX() / 32 - 1 - power][entity.getY() / 32] == 3
+                || id_objects[entity.getX() / 32 - 1 - power][entity.getY() / 32] == 6
+                || id_objects[entity.getX() / 32 - 1 - power][entity.getY() / 32] == 7
+                || id_objects[entity.getX() / 32 - 1 - power][entity.getY() / 32] == 8;
     }
 
-    // API movement
-    public static boolean block_down(Entity entity) { return canMoveSmooth(entity, 0, 1); }
-    public static boolean block_up(Entity entity) { return canMoveSmooth(entity, 0, -1); }
-    public static boolean block_left(Entity entity) { return canMoveSmooth(entity, -1, 0); }
-    public static boolean block_right(Entity entity) { return canMoveSmooth(entity, 1, 0); }
-
-    // API explosion
-    public static boolean block_down_bomb(Entity entity, int power) { return explosionCheck(entity, 0, 1, power); }
-    public static boolean block_up_bomb(Entity entity, int power) { return explosionCheck(entity, 0, -1, power); }
-    public static boolean block_left_bomb(Entity entity, int power) { return explosionCheck(entity, -1, 0, power); }
-    public static boolean block_right_bomb(Entity entity, int power) { return explosionCheck(entity, 1, 0, power); }
+    public static boolean block_right_bomb(Entity entity, int power) {      //Limit the scope and animation of the explosion to the right
+        return id_objects[entity.getX() / 32 + 1 + power][entity.getY() / 32] == 0
+                || id_objects[entity.getX() / 32 + 1 + power][entity.getY() / 32] == 3
+                || id_objects[entity.getX() / 32 + 1 + power][entity.getY() / 32] == 6
+                || id_objects[entity.getX() / 32 + 1 + power][entity.getY() / 32] == 7
+                || id_objects[entity.getX() / 32 + 1 + power][entity.getY() / 32] == 8;
+    }
 }
