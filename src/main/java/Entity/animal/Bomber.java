@@ -21,21 +21,13 @@ public class Bomber extends Animal {
         super(x, y, img);
     }
 
-    private void killBomber(Animal animal) {//Lần lượt chuyển ảnh ng chơi chết
+     private void killBomber(Animal animal) {
         if (count_kill % 16 == 0) {
-            if (swap_kill == 1) {
-                animal.setImg(Sprite.player_dead_1.getFxImage());
-                swap_kill = 2;
-            } 
-            else if (swap_kill == 2) {
-                animal.setImg(Sprite.player_dead_2.getFxImage());
-                swap_kill = 3;
-            } 
-            else if (swap_kill == 3) {
-                animal.setImg(Sprite.player_dead_3.getFxImage());
-                swap_kill = 4;
-            } 
-            else {
+            if (swap_kill <= Sprite.NUM_PLAYER_DEAD_FRAME) {
+                animal.setImg(Sprite.player_dead[swap_kill - 1].getFxImage());
+                swap_kill++;
+            }
+            else { 
                 animal.setImg(Sprite.transparent.getFxImage());
                 running = false;
                 Image gameOver = new Image("images/gameOver.png");
@@ -73,4 +65,5 @@ public class Bomber extends Animal {
         if (!player.life)
             killBomber(player);
     }
+
 }
