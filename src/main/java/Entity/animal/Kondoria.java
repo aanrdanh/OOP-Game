@@ -29,13 +29,9 @@ public class Kondoria extends Animal {
 
     private void killKondoria(Animal animal) {
         if (count_kill % 16 == 0) {
-            if (swap_kill == 1) {
-                animal.setImg(Sprite.kondoria_dead.getFxImage());
-                swap_kill = 2;
-            } 
-            else if (swap_kill == 2) {
-                animal.setImg(Sprite.player_dead_3.getFxImage());
-                swap_kill = 3;
+            if (swap_kill <= Sprite.NUM_KONDORIA_DEAD_FRAME) {
+                animal.setImg(Sprite.kondoria_dead[swap_kill - 1].getFxImage());
+                swap_kill++;
             } 
             else {
                 animal.setLife(false);
@@ -44,6 +40,7 @@ public class Kondoria extends Animal {
             }
         }
     }
+
 
     @Override
     public void update() {
@@ -61,4 +58,5 @@ public class Kondoria extends Animal {
                 Move.right(this);
         }
     }
+
 }
