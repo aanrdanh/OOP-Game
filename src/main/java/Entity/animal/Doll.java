@@ -3,8 +3,8 @@ package Entity.animal;
 import java.util.List;
 
 import Control.Move;
-import Entity.animal.moving_stategy.AStar;
-import Entity.animal.moving_stategy.Node;
+import Entity.animal.intelligent.AStar;
+import Entity.animal.intelligent.Node;
 import Graphics.Sprite;
 import javafx.scene.image.Image;
 
@@ -30,14 +30,11 @@ public class Doll extends Animal{
 
     }
 
-    private void killDoll(Animal animal) {//Doll chết
+    private void killDoll(Animal animal) {
         if (count_kill % 16 == 0) {
-            if (swap_kill == 1) {
-                animal.setImg(Sprite.doll_dead.getFxImage());
-                swap_kill = 2;
-            } else if (swap_kill == 2) {
-                animal.setImg(Sprite.player_dead_3.getFxImage());
-                swap_kill = 3;
+            if (swap_kill <= Sprite.NUM_DOLL_DEAD_FRAME) {
+                animal.setImg(Sprite.doll_dead[swap_kill - 1].getFxImage());
+                swap_kill = swap_kill + 1;
             } else {
                 animal.setLife(false);
                 enemy.remove(animal);
@@ -46,7 +43,7 @@ public class Doll extends Animal{
         }
     }
 
-    private void moveDoll() {//Di chuyển con này dựa trên thuật toán ASTAR
+    private void moveDoll() {
         if (this.x % 32 == 0 && this.y %32 == 0) {
             Node initial_node = new Node(this.y / 32, this.x / 32);
             Node final_node = new Node(player.getY() / 32, player.getX() / 32);
@@ -56,7 +53,7 @@ public class Doll extends Animal{
 
             AStar a_star = new AStar(rows, cols, initial_node, final_node);
 
-            int[][] blocks_in_array = new int[width * height][2];//Lưu các vị trí mà block ở đó
+            int[][] blocks_in_array = new int[width * height][2];
             int count_block = 0;
 
             for (int i = 0; i < height; i++) {
@@ -70,7 +67,7 @@ public class Doll extends Animal{
             }
             a_star.setBlocks(blocks_in_array, count_block);
             List<Node> path = a_star.findPath();
-            if (path.size() != 0) {//Tìm được một đường khả thi để đến với ng chơi
+            if (path.size() != 0) {
                 int nextX = path.get(1).getCol();
                 int nextY = path.get(1).getRow();
 
@@ -89,9 +86,11 @@ public class Doll extends Animal{
     @Override
     public void update() {
         count_kill++;
-        if(this instanceof Doll && !this.life){
-                killDoll(this);
+        for (Animal animal:enemy) {
+            if (animal instanceof Doll && !animal.life)
+                killDoll(animal);
         }
         moveDoll();
     }
 }
+
