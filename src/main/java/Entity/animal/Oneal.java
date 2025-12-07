@@ -40,10 +40,17 @@ public class Oneal extends Animal {
             }
         }
     }
-
+    private void kill() {
+        for (Animal animal : enemy) {
+            if (list_kill[animal.getX() / 32][animal.getY() / 32] == 4) {
+                animal.setLife(false);
+            }
+        }
+    }
     @Override
     public void update() {
         count_kill++;
+        kill();
         if (this instanceof Oneal && !this.life)
             killOneal(this);
         if (this.y % 16 == 0 && this.x % 16 == 0) {//Di chuyển theo hướng về ng chơi (ko phải cố bắt)
