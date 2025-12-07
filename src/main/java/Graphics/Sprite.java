@@ -1,4 +1,8 @@
 package Graphics;
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 import javafx.scene.image.*;
 
@@ -40,7 +44,8 @@ public class Sprite {
         load();
     }
 
-    // Constructor này để tạo các Sprite load đồ họa từ 1 file ảnh, thay vì từ SpriteSheet
+    private BufferedImage image;
+
     public Sprite(int SIZE, int real_width, int real_height, String imagePath) {
         this.SIZE = SIZE;
         this.real_width = real_width;
@@ -50,7 +55,6 @@ public class Sprite {
         loadFromFile(imagePath);
     }
 
-    // Constructor này như trên nhưng xóa luôn nền của ảnh Sprite (biến background là màu được chọn để xóa)
     public Sprite(int SIZE, int real_width, int real_height, String imagePath, int background) {
         this.SIZE = SIZE;
         this.real_width = real_width;
@@ -60,7 +64,6 @@ public class Sprite {
         loadFromFile(imagePath, background);
     }
 
-    // load file ảnh
     private void loadFromFile(String path) {
     try {
         File file = new File(path);
@@ -87,8 +90,8 @@ public class Sprite {
         }
     }
 
-    // load file ảnh asset nhưng xóa nền
     private void loadFromFile(String path, int make_transparency_color) {
+        // cái này để xóa nền 1 ảnh asset thành trong suốt/
         // make_transparency_color là màu nền, cần xóa.
     try {
         File file = new File(path);
@@ -129,6 +132,8 @@ public class Sprite {
     public static Sprite wall = new Sprite(ORIGINAL_SIZE, 5, 0, 16, 16, SpriteSheet.tiles);
 
     /* Bomber: to create object control when player move in 4 directions: up, down, right, and left */
+    /* Bomber: control sprites (4 directions + animation frames) */
+    /* Bomber: control sprites (4 directions + animation frames) */
     public static Sprite control_up      = new Sprite(ORIGINAL_SIZE,16, 16, "res/player/blue_character.png",0x73bd9c);
     public static Sprite control_down    = new Sprite(ORIGINAL_SIZE,16, 16, "res/player/blue_character.png",0x73bd9c);
     public static Sprite control_right   = new Sprite(ORIGINAL_SIZE,16, 16, "res/player/blue_character.png",0x73bd9c);
@@ -144,7 +149,7 @@ public class Sprite {
     public static Sprite control_left_1  = new Sprite(ORIGINAL_SIZE,16, 16, "res/player/blue_character.png",0x73bd9c);
     public static Sprite control_left_2  = new Sprite(ORIGINAL_SIZE,16, 16, "res/player/blue_character.png",0x73bd9c);
 
-   // Khai báo mảng để quản lý các frame ảnh mà nhân vật chết. Nhiều frame nên dùng mảng cho tiện
+
     public static Sprite [] player_dead = new Sprite[NUM_PLAYER_DEAD_FRAME];
 
     static{
@@ -153,7 +158,9 @@ public class Sprite {
         }
     }
 
-
+    /* Death: Create object when player dead */
+    // public Sprite(int SIZE, int real_width, int real_height, String imagePath)
+    
     /* Character/Enemy: Create an object for each enemy and follow up on the movement direction */
 
     // BALLOM
@@ -167,11 +174,11 @@ public class Sprite {
 
     public static Sprite ballom_dead = new Sprite(ORIGINAL_SIZE, 9, 3, 16, 16, SpriteSheet.tiles);
 
-   // Khai báo mảng để quản lý các frame ảnh mà nhân vật chết. Nhiều frame nên dùng mảng cho tiện
+   // Khai báo mảng
     public static Sprite[] mob_dead = new Sprite[NUM_MOB_DEAD_FRAME];
 
     static{
-        for (int i = 0; i < NUM_MOB_DEAD_FRAME; i++) {
+        for (int i = 0; i < 10; i++) {
             // i+1 để tên file chạy từ crab_dead1.png đến crab_dead10.png
             mob_dead[i] = new Sprite(ORIGINAL_SIZE, 16, 16, "res/enemy/crab_dead" + (i + 1) + ".png");
         }
@@ -194,7 +201,7 @@ public class Sprite {
         }
     }
 
-     // DOLL
+    // DOLL
     public static Sprite doll_right_1 = new Sprite(ORIGINAL_SIZE, 16,16,"res/enemy/e2_main.png");
     public static Sprite doll_right_2 = new Sprite(ORIGINAL_SIZE, 16,16,"res/enemy/e2_main.png");
     public static Sprite doll_right_3 = new Sprite(ORIGINAL_SIZE, 16,16,"res/enemy/e2_main.png");
@@ -211,18 +218,7 @@ public class Sprite {
         }
     }
 
-    // MINVO
-    public static Sprite minvo_right_1 = new Sprite(ORIGINAL_SIZE, 9, 5, 16, 16, SpriteSheet.tiles);
-    public static Sprite minvo_right_2 = new Sprite(ORIGINAL_SIZE, 9, 6, 16, 16, SpriteSheet.tiles);
-    public static Sprite minvo_right_3 = new Sprite(ORIGINAL_SIZE, 9, 7, 16, 16, SpriteSheet.tiles);
-
-    public static Sprite minvo_left_1 = new Sprite(ORIGINAL_SIZE, 8, 5, 16, 16, SpriteSheet.tiles);
-    public static Sprite minvo_left_2 = new Sprite(ORIGINAL_SIZE, 8, 6, 16, 16, SpriteSheet.tiles);
-    public static Sprite minvo_left_3 = new Sprite(ORIGINAL_SIZE, 8, 7, 16, 16, SpriteSheet.tiles);
-
-    public static Sprite minvo_dead = new Sprite(ORIGINAL_SIZE, 8, 8, 16, 16, SpriteSheet.tiles);
-
-    // KONDORIA
+        // KONDORIA
     public static Sprite kondoria_right_1 = new Sprite(ORIGINAL_SIZE, 16,16,"res/enemy/e3_main.png");
     public static Sprite kondoria_right_2 = new Sprite(ORIGINAL_SIZE, 16,16,"res/enemy/e3_main.png");
     public static Sprite kondoria_right_3 = new Sprite(ORIGINAL_SIZE, 16,16,"res/enemy/e3_main.png");
@@ -239,11 +235,25 @@ public class Sprite {
         }
     }
 
+    // MINVO
+    public static Sprite minvo_right_1 = new Sprite(ORIGINAL_SIZE, 9, 5, 16, 16, SpriteSheet.tiles);
+    public static Sprite minvo_right_2 = new Sprite(ORIGINAL_SIZE, 9, 6, 16, 16, SpriteSheet.tiles);
+    public static Sprite minvo_right_3 = new Sprite(ORIGINAL_SIZE, 9, 7, 16, 16, SpriteSheet.tiles);
+
+    public static Sprite minvo_left_1 = new Sprite(ORIGINAL_SIZE, 8, 5, 16, 16, SpriteSheet.tiles);
+    public static Sprite minvo_left_2 = new Sprite(ORIGINAL_SIZE, 8, 6, 16, 16, SpriteSheet.tiles);
+    public static Sprite minvo_left_3 = new Sprite(ORIGINAL_SIZE, 8, 7, 16, 16, SpriteSheet.tiles);
+
+    public static Sprite minvo_dead = new Sprite(ORIGINAL_SIZE, 8, 8, 16, 16, SpriteSheet.tiles);
+
+
+
+
 
     /* BOMB SPRITES */
-    public static Sprite bomb = new Sprite(ORIGINAL_SIZE, 0, 3, 15, 15, SpriteSheet.tiles);
-    public static Sprite bomb_1 = new Sprite(ORIGINAL_SIZE, 1, 3, 13, 15, SpriteSheet.tiles);
-    public static Sprite bomb_2 = new Sprite(ORIGINAL_SIZE, 2, 3, 12, 14, SpriteSheet.tiles);
+    public static Sprite bomb = new Sprite(ORIGINAL_SIZE,0,3, 16,16,SpriteSheet.tiles);
+    public static Sprite bomb_1 = new Sprite(ORIGINAL_SIZE, 1,3,16,16,SpriteSheet.tiles);
+    public static Sprite bomb_2 = new Sprite(ORIGINAL_SIZE, 1,3,16,16,SpriteSheet.tiles);
 
     /* FlameSegment Sprites: Create object bomb flame, default range is 2px to the vertical and horizontal, begin in the center position */
     public static Sprite bomb_exploded = new Sprite(ORIGINAL_SIZE, 0, 4, 16, 16, SpriteSheet.tiles);
