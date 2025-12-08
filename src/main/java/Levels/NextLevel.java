@@ -12,7 +12,18 @@ public class NextLevel {
 
     public static void waitToLevelUp() {
         if (wait) {
-            Image wait_to_next = new Image("images/levelUp.png");
+            Image wait_to_next = new Image("images/levelUpBomberman.png");
+            // 1. Reset lại vị trí về góc 0, 32 ( bỏ phần thanh menu)
+            author_view.setX(0); 
+            author_view.setY(32);
+                
+            // 2. Reset lại tỷ lệ về 1 (không thu nhỏ nữa)
+            author_view.setScaleX(1);
+            author_view.setScaleY(1);
+                
+            // 3. Set kích thước full màn hình
+            author_view.setFitWidth(800);
+            author_view.setFitHeight(480);
             // add image level up to authorView
             author_view.setImage(wait_to_next);
             // load next Level
