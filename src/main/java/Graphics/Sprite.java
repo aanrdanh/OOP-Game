@@ -214,7 +214,7 @@ public class Sprite {
 
     static{
         for(int i = 0; i < NUM_DOLL_DEAD_FRAME; i++){
-            doll_dead[i] = new Sprite(ORIGINAL_SIZE,16,16,"res/e2_dead" + (i + 1) + ".png");
+            doll_dead[i] = new Sprite(ORIGINAL_SIZE,16,16,"res/enemy/e2_dead" + (i + 1) + ".png");
         }
     }
 
@@ -231,7 +231,7 @@ public class Sprite {
 
     static{
         for(int i = 0; i < NUM_KONDORIA_DEAD_FRAME; i++){
-            kondoria_dead[i] = new Sprite(ORIGINAL_SIZE,16,16,"res/e3_dead" + (i + 1) + ".png");
+            kondoria_dead[i] = new Sprite(ORIGINAL_SIZE,16,16,"res/enemy/e3_dead" + (i + 1) + ".png");
         }
     }
 
