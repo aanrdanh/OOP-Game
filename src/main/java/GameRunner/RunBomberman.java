@@ -110,7 +110,7 @@ public class RunBomberman extends Application {
         });
 
         stage.setScene(scene);
-        stage.setTitle("Bomberman by 404 NOT FOUND");
+        stage.setTitle("Bomberman by 6_AE_SIEU_NHAN");
         Image icon = new Image("images/ttsalpha4.0@0.5x.png");
         stage.getIcons().add(icon);
         main_stage = stage;
